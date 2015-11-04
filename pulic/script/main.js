@@ -1,40 +1,53 @@
 $(document).ready(function () {
-	var USERNAME = '';
-	var $window = $(window),
-		$joinBtn = $('#joinBtn'),
-		$joinInput = $('#joinInput'),
-		$login = $('div.login'),
-		$main = $('div.main'),
-		$handlePenle = $('ul.handle-panel'),
-		$groupChatPanel = $('div.group-chat-panel');
-	var chatWorkes = new Worker('script/chatWorker.js');
-	chatWorkes.postMessage('this is test msg');
+	var ME = {
+		/*用户自定义数据*/
+		USER: {
+			username: '',
+			chatWorkes: new Worker('script/chatWorker.js')
+		},
+		/*dom相关*/
+		DOM: {
+			$window: $(window),
+			$joinBtn: $('#joinBtn'),
+			$joinInput: $('#joinInput'),
+			$login: $('div.login'),
+			$main: $('div.main'),
+			$handlePenle: $('ul.handle-panel'),
+			$groupChatPanel: $('div.group-chat-panel')
+		}
+
+	};
+	ME.USER.chatWorkes.postMessage('this is test msg');
 	(function init() {
-		$window.keydown(function (event) {
+		ME.DOM.$window.keydown(function (event) {
 			/*按键没有特殊的按键的影响*/
 			if (!(event.ctrlKey || event.metaKey || event.altKey)) {
-				$joinInput.focus();
+				ME.DOM.$joinInput.focus();
 			}
 			if (event.which === 13) {
-				USERNAME = cleanInput($joinInput.val());
-				$login.fadeOut(1000, function () {
-					$login.css({
+				ME.DOM.username = cleanInput(ME.DOM.$joinInput.val());
+				ME.DOM.$login.fadeOut(1000, function () {
+					ME.DOM.$login.css({
 						display: 'none'
 					});
-					$main.fadeIn(500);
+					ME.DOM.$main.fadeIn(500);
 					initChatRoom();
 				});
 			}
 		});
 	})();
-
+	//  初始化聊天室
 	function initChatRoom() {
-		$handlePenle.on('click', 'li', function (event) {
+		ME.DOM.$handlePenle.on('click', 'li', function (event) {
 			var $this = $(this);
-			var temp = $groupChatPanel.fadeToggle(500);
+			var temp = ME.DOM.$groupChatPanel.fadeToggle(500);
 		});
+	};
+	//	初始化用户角色地图
+	function initGame() {
+
 	}
-	//用于清除危险字符用的
+	//  用于清除危险字符用的
 	function cleanInput(input) {
 		return $('<div/>').text(input).text();
 	};
