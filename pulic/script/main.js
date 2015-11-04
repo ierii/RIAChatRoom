@@ -1,13 +1,13 @@
 $(document).ready(function () {
-	var USERNAME = '',
-		$window = $(window),
+	var USERNAME = '';
+	var $window = $(window),
 		$joinBtn = $('#joinBtn'),
 		$joinInput = $('#joinInput'),
 		$login = $('div.login'),
 		$main = $('div.main'),
 		$handlePenle = $('ul.handle-panel'),
 		$groupChatPanel = $('div.group-chat-panel');
-	var chatWorkes=new Worker('script/chatWorker.js');
+	var chatWorkes = new Worker('script/chatWorker.js');
 	chatWorkes.postMessage('this is test msg');
 	(function init() {
 		$window.keydown(function (event) {
@@ -30,7 +30,7 @@ $(document).ready(function () {
 
 	function initChatRoom() {
 		$handlePenle.on('click', 'li', function (event) {
-			var $this =$(this);
+			var $this = $(this);
 			var temp = $groupChatPanel.fadeToggle(500);
 		});
 	}
