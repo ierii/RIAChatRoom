@@ -31,9 +31,8 @@ $(document).ready(function () {
 
 	function initChatRoom() {
 		$handlePenle.on('click', 'li', function (event) {
-			var target = this;
+			var $this =$(this);
 			var temp = $groupChatPanel.fadeToggle(500);
-			console.log(temp);
 		});
 	}
 	//用于清除危险字符用的
