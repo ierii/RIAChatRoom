@@ -9,6 +9,7 @@ body {
   position: absolute;
 }
 .login {
+  display: none;
   position: relative;
   width: 100%;
   height: 100%;
@@ -59,31 +60,26 @@ body {
   color: #8e8e8e;
 }
 .main {
-  display: none;
   position: relative;
   width: 100%;
   height: 100%;
   margin: 0 auto;
 }
 .main .handle-panel {
+  top: 0px;
+  right: 0px;
+  display: block;
   position: absolute;
   border: 1px solid #000;
-  height: 100%;
   width: 100px;
 }
-.main .opbtn {
-  z-index: 1200;
-  position: absolute;
-  width: 80px;
-  height: 80px;
-  top: 10px;
-  right: 10px;
+.main .handle-panel li {
   line-height: 80px;
   text-align: center;
-  font-size: 50px;
-  border: 3px solid #000;
-  border-radius: 10px;
-  cursor: pointer;
+  font-size: 80px;
+  display: block;
+  width: 80px;
+  height: 80px;
 }
 .main .chat-room-wrapper {
   z-index: 1000;
