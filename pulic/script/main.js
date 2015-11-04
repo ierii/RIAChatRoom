@@ -14,7 +14,15 @@ $(document).ready(function () {
 			$main: $('div.main'),
 			$handlePenle: $('ul.handle-panel'),
 			$groupChatPanel: $('div.group-chat-panel')
-		}
+		},
+		WOK:(function(){
+			return {
+				emit:function(){},
+				on:function(){},
+				trigger:function(){},
+				off:function(){}
+			};
+		}())
 
 	};
 	ME.USER.chatWorkes.postMessage('this is test msg');
@@ -25,7 +33,7 @@ $(document).ready(function () {
 				ME.DOM.$joinInput.focus();
 			}
 			if (event.which === 13) {
-				ME.DOM.username = cleanInput(ME.DOM.$joinInput.val());
+				ME.USER.username = cleanInput(ME.DOM.$joinInput.val());
 				ME.DOM.$login.fadeOut(1000, function () {
 					ME.DOM.$login.css({
 						display: 'none'
