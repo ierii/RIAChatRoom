@@ -7,7 +7,7 @@ $(document).ready(function () {
 		$main = $('div.main'),
 		$handlePenle = $('ul.handle-panel'),
 		$groupChatPanel = $('div.group-chat-panel');
-	var chatWorkes=new Worker('script/chatWorker');
+	var chatWorkes=new Worker('script/chatWorker.js');
 	chatWorkes.postMessage('this is test msg');
 	(function init() {
 		$window.keydown(function (event) {
