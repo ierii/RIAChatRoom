@@ -5,8 +5,9 @@ $(document).ready(function () {
 		$joinInput = $('#joinInput'),
 		$login = $('div.login'),
 		$main = $('div.main'),
-		$handlePenle=$('ul.handle-panel');
-	var handles = {
+		$handlePenle=$('ul.handle-panel'),
+		$groupChatPanel=$('div.group-chat-panel');
+	var panelHandles = {
 
 	};
 	(function init() {
@@ -29,7 +30,8 @@ $(document).ready(function () {
 	})();
 	function initChatRoom(){
 		$handlePenle.on('click','li',function(event){
-			console.log(event.target);
+			var target=this;
+			$groupChatPanel.fadeToggle(500);
 		});
 	}
 	//用于清除危险字符用的

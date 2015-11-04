@@ -11,7 +11,7 @@ body {
 }
 
 .login {
-	display: none;
+//	display: none;
 	position: relative;
 	width: 100%;
 	height: 100%;
@@ -65,12 +65,13 @@ body {
 
 .main {
 	//	border: 1px solid #000;
-	//	display: none;
+		display: none;
 	position: relative;
 	width: 100%;
 	height: 100%;
 	margin: 0 auto;
 	.handle-panel {
+		z-index: 1300;
 		top: 0px;
 		right: 0px;
 		display: block;
@@ -78,6 +79,7 @@ body {
 		//		border: 1px solid #000;
 		width: 80px;
 		li {
+			z-index: 1320;
 			margin: 10px auto;
 			line-height: 60px;
 			text-align: center;
@@ -89,6 +91,9 @@ body {
 			border-radius: 20px;
 			cursor: pointer;
 			transition: all 0.5s;
+			i{
+				z-index: 1310;
+			}
 			&:hover {
 				border-radius: 10px;
 				color: #ccc;
@@ -96,7 +101,7 @@ body {
 			}
 		}
 	}
-	.chat-room-wrapper {
+	.group-chat-panel {
 		display: none;
 		z-index: 1000;
 		position: absolute;
