@@ -83,6 +83,13 @@ body {
   border: 2px solid #000;
   border-radius: 20px;
   cursor: pointer;
+  -webkit-transition: all 0.5s;
+          transition: all 0.5s;
+}
+.main .handle-panel li:hover {
+  border-radius: 10px;
+  color: #ccc;
+  border-color: #ccc;
 }
 .main .chat-room-wrapper {
   z-index: 1000;
