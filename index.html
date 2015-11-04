@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="renderer" content="webkit">
+	<link rel="stylesheet" href="style/base.css">
+	<link rel="stylesheet" href="style/index.css">
+	<link rel="stylesheet" href="style/font-awesome.min.css">
+	<title>富媒体聊天室</title>
+</head>
+
+<body>
+	<div class="login">
+		<div class="login-wrapper">
+			<input type="text" id="joinInput" placeholder="请输入昵称进行聊天室">
+			<button id="joinBtn">JOIN IN</button>
+		</div>
+		<ul class="operation-prompt">
+			<li>输入昵称进入聊天室</li>
+			<li>可以与在线用户群聊</li>
+			<li>点击其他用户角与其聊天</li>
+			<li>点击页面获取焦点用上下左右控制用户角色移动</li>
+		</ul>
+	</div>
+	<div class="main">
+		<!--这边做成一个功能列表！！！-->
+		<div class="opbtn">
+			<i class="fa fa-commenting-o"></i>
+		</div>
+		<div class="chat-room-wrapper">
+			<ul class="msg-wrapper">
+				<li class="prompt">xxx上线了。。</li>
+				<li class="msg-left">老王：呵呵呵</li>
+				<li class="msg-right">我：呵sdagh 呵呵</li>
+				<li class="msg-right">我:如果消息比较长呢？我:如果消息比较长呢？我:如果消息比较长呢？我:如果消息比较长呢？</li>
+
+			</ul>
+			<input type="text" class="msg-input" placeholder="请输入消息">
+		</div>
+		<canvas class="game-wrapper"></canvas>
+		<div class="alert"></div>
+	</div>
+	<script src="script/extends/modernizr-custom.js"></script>
+	<script src="script/extends/jquery.min.js"></script>
+	<script src="script/check.js"></script>
+	<script src="script/main.js"></script>
+</body>
+
+</html>

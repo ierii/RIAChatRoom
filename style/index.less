@@ -1,0 +1,165 @@
+html,
+body {
+	height: 100%;
+	width: 100%;
+}
+
+body {
+	font-family: YouYuan;
+	font-size: 16px;
+	position: absolute;
+}
+
+.login {
+//	display: none;
+	position: relative;
+	width: 100%;
+	height: 100%;
+	margin: 0% auto;
+	//	border: 1px solid #000;
+	overflow: hidden;
+	background-image: url(../images/bg.jpg);
+	background-position: left bottom;
+	background-repeat: no-repeat;
+	.login-wrapper {
+		width: 500px;
+		margin: 20% auto;
+		margin-bottom: 0;
+		//		border: 1px solid #000;
+		overflow: hidden;
+		input,
+		button {
+			padding: 3% 0;
+			position: relative;
+			text-align: center;
+			display: block;
+			float: left;
+			border: 1px solid #94a29f;
+		}
+		input {
+			border-right: none;
+			width: 80%;
+			border-radius: 5px 0 0 5px;
+		}
+		button {
+			background-color: #fff;
+			width: 19%;
+			border-radius: 0 5px 5px 0;
+			color: #716e6e;
+			cursor: pointer;
+			transition: all 0.5s;
+			&:hover {
+				color: #000;
+			}
+		}
+	}
+	.operation-prompt {
+		line-height: 2em;
+		font-size: 14px;
+		display: none;
+		width: 500px;
+		margin: 2% auto;
+		color: #8e8e8e;
+	}
+}
+
+.main {
+	//	border: 1px solid #000;
+	display: none;
+	position: relative;
+	width: 100%;
+	height: 100%;
+	margin: 0 auto;
+	.opbtn {
+//		display: none;
+		z-index: 1200;
+		position: absolute;
+		width: 80px;
+		height: 80px;
+		top: 10px;
+		right: 10px;
+		line-height: 80px;
+		text-align: center;
+		font-size: 50px;
+		border: 3px solid #000;
+		border-radius: 10px;
+		cursor: pointer;
+	}
+	.chat-room-wrapper {
+//				display: none;
+		z-index: 1000;
+		position: absolute;
+		top: 2px;
+		left: 0%;
+		width: 30%;
+		height: 99%;
+//		border:1px solid #000;
+		border-radius: 5px;
+		background: rgba(255, 255, 255, 0);
+		.msg-wrapper,
+		.msg-input {
+			border-radius: 3px;
+			display: block;
+			margin: 2% auto;
+		}
+		.msg-wrapper {
+			display: block;
+			border: 2px solid #000000;
+			width: 90%;
+			height: 90%;
+			overflow-x: hidden;
+			overflow-y: scroll;
+			li {
+				border: none;
+				display: block;
+				width: 70%;
+				padding: 2%;
+				margin: 2% 3%;
+				font-size: 14px;
+			}
+			li.prompt {
+				width: 60%;
+				float: left;
+				font-size: 12px;
+				color: #baa5a5;
+				border-bottom: 1px dashed #baa5a5;
+			}
+			li.msg-left {
+				text-align: left;
+				float: left;
+				color: #12b3d9;
+				border-bottom: 1px dashed #12b3d9;
+			}
+			li.msg-right {
+				text-align: left;
+				float: right;
+				color: #0fc145;
+				border-bottom: 1px dashed #19a529;
+			}
+		}
+		.msg-input {
+			width: 86%;
+			padding: 3% 2%;
+			display: block;
+			border: 2px solid #000;
+			background:rgba(255, 255, 255, 0);
+		}
+	}
+}
+
+.alert {
+	top: 50%;
+	left: 50%;
+	line-height: 2em;
+	margin-top: -100px;
+	margin-left: -300px;
+	width: 600px;
+	display: none;
+	z-index: 1100;
+	position: fixed;
+	padding: 2%;
+	color: #ccc;
+	border: 2px solid rgba(106, 106, 106, 0.81);
+	background-color: rgba(0, 0, 0, 0.68);
+	border-radius: 10px;
+}
