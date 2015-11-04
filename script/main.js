@@ -5,8 +5,8 @@ $(document).ready(function () {
 		$joinInput = $('#joinInput'),
 		$login = $('div.login'),
 		$main = $('div.main'),
-		$handlePenle=$('ul.handle-panel'),
-		$groupChatPanel=$('div.group-chat-panel');
+		$handlePenle = $('ul.handle-panel'),
+		$groupChatPanel = $('div.group-chat-panel');
 	var panelHandles = {
 
 	};
@@ -28,10 +28,12 @@ $(document).ready(function () {
 			}
 		});
 	})();
-	function initChatRoom(){
-		$handlePenle.on('click','li',function(event){
-			var target=this;
-			$groupChatPanel.fadeToggle(500);
+
+	function initChatRoom() {
+		$handlePenle.on('click', 'li', function (event) {
+			var target = this;
+			var temp = $groupChatPanel.fadeToggle(500);
+			console.log(temp);
 		});
 	}
 	//用于清除危险字符用的
