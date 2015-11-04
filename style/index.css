@@ -74,12 +74,14 @@ body {
   width: 100px;
 }
 .main .handle-panel li {
+  margin: 2% auto;
   line-height: 80px;
   text-align: center;
-  font-size: 80px;
+  font-size: 60px;
   display: block;
   width: 80px;
   height: 80px;
+  border: 3px solid #000;
 }
 .main .chat-room-wrapper {
   z-index: 1000;
