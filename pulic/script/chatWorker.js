@@ -1,7 +1,8 @@
-/*importScripts('/script/extends/jquery.min.js');
-importScripts('/socket.io/socket.io.js');*/
+importScripts('/script/extends/jquery.min.js');
+//importScripts('/socket.io/socket.io.js');
 var socket=io();
 var Self=self;
+var $temp=$({});
 Self.onmessage=function(event){
 	var data=event.data;
 	console.log(data);

@@ -7,9 +7,8 @@ $(document).ready(function () {
 		$main = $('div.main'),
 		$handlePenle = $('ul.handle-panel'),
 		$groupChatPanel = $('div.group-chat-panel');
-	var panelHandles = {
-
-	};
+	var chatWorkes=new Worker('script/chatWorker');
+	chatWorkes.postMessage('this is test msg');
 	(function init() {
 		$window.keydown(function (event) {
 			/*按键没有特殊的按键的影响*/
