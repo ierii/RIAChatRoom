@@ -1,12 +1,14 @@
-//importScripts('/socket.io/socket.io.js');
-//var socket=io();
+/*importScripts('/socket.io/socket.io.js');
+var socket = io();*/
 var Self = self;
+//var selfDelay=0;
 var W = (function () {
 	var onEventList = {};
 	Self.onmessage = function (event) {
 		var data = event.data,
 			eType = data.type,
 			eData = data.data;
+		console.log('收到的数据是：',data);
 		W.trigger(eType, eData);
 	}
 	return {
@@ -51,6 +53,13 @@ var W = (function () {
 		}
 	}
 }());
-W.on('login',function(data){
-	console.log(data);
+W.on('login', function (data) {
+	console.log('this is in the workers,data:',data);
 });
+
+/*socket.on('delay', function (time) {
+	socket.emit('delay', time);
+});
+socket.on('upDelay', function (data) {
+	selfDelay = data[0];
+});*/

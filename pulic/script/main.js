@@ -14,15 +14,35 @@ $(document).ready(function () {
 			$handlePanle: $('ul.handle-panel'),
 			$groupChatPanel: $('div.group-chat-panel')
 		},
-		WOK: (function () {
-			return {
-				emit: function () {},
-				on: function () {},
-				trigger: function () {},
-				off: function () {}
-			};
-		}())
+		WOK: FactoryWorker('script/chatWorker.js')
 
+	};
+	/**/
+	function FactoryWorker(workerUrl) {
+		if (!window.Worker) return;
+		var worker = new Worker(workerUrl),
+			$event = $({});
+		var W = {
+			emit: function (type, data) {
+				worker.postMessage({
+					type: type,
+					data: data
+				});
+			},
+			on: function (type, fn) {
+				$event.on(type, fn);
+			},
+			off: function (type, fn) {
+				$event.off(type, fn);
+			}
+		};
+		worker.onmessage = function (event) {
+			var EData = event.data,
+				type = EData.type,
+				data = EData.data;
+			$event.trigger(type,data);
+		}
+		return W;
 	};
 	(function init() {
 		ME.DOM.$window.keydown(function (event) {
@@ -35,7 +55,7 @@ $(document).ready(function () {
 					ME.DOM.$main.show(500);
 				});
 				initHandelPanel();
-				initGame(cleanInput(ME.DOM.$joinInput));
+				initGame(cleanInput(ME.DOM.$joinInput.val()));
 			}
 		});
 	})();
@@ -48,25 +68,23 @@ $(document).ready(function () {
 		ME.DOM.$handlePanle.on('click', 'li', function (event) {
 			var $this = $(this),
 				panelName = $(this).data('panel');
-			if(!!!panelName)return;
+			if (!!!panelName) return;
 			var $panel = Panles[panelName];
 			$this.removeClass('prompt');
 			$panel.slideToggle(500);
 		});
 		/*而后还可以写一下与消息同志的机制*/
 	}
-
-	function initLogin(username) {
-		ME.USER.username = username;
-		/*emit login*/
-	};
 	//  初始化聊天室，这里有与后台交互的功能
 	function initChatRoom() {
 
 	};
 	//	初始化用户角色地图，这里也有
-	function initGame() {
-		//1.先显示出游戏角色
+	function initGame(username) {
+		ME.USER.username = username;
+		//		emit login
+		console.log('this main workers emit!!');
+		ME.WOK.emit('login',[username]);
 	}
 
 	function penelAnimateCtrl() {

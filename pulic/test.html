@@ -30,6 +30,18 @@
 
 <body>
 	<div id="prompt" class="animate"></div>
+	<script src="script/extends/jquery.min.js"></script>
+	<script>
+		$(document).ready(function(){
+			var $temp=$('#prompt');
+			$temp.on('big',function(event,d1,d2){
+				console.log('event',event);
+				console.log('d1:',d1);
+				console.log('d2:',d2);
+			});
+			$temp.trigger('big',['one','two']);
+		});
+	</script>
 </body>
 
 </html>

@@ -13,7 +13,17 @@ app.use(express.static(__dirname + '/public'));
 var users = [],
 	index = 0;
 io.on('connection', function (socket) {
-
+	socket.on('delay',function(data){
+		var delay = ((+new Date() - data[0]) / 2) >> 0;
+		socket.emit('upDelay', [delay]);
+	});
+	socket.emit('delay',[+new Date()]);
+	(function upDelay(){
+		var T=setTimeout(function(){
+			socket.emit('delay',[+new Date()]);
+			upDelay();
+		},2000);
+	}());
 	socket.on('disconnect', function() {
 
 	});
