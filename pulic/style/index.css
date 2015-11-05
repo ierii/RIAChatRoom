@@ -101,8 +101,12 @@ body {
           animation-duration: 0.5s;
   -webkit-animation-timing-function: ease-in-out;
           animation-timing-function: ease-in-out;
-  -webkit-animation-iteration-count: 2;
-          animation-iteration-count: 2;
+  -webkit-animation-iteration-count: 3;
+          animation-iteration-count: 3;
+  -webkit-animation-delay: 5s;
+          animation-delay: 5s;
+  -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
 }
 @-webkit-keyframes prompt {
   0% {
@@ -123,11 +127,14 @@ body {
   75% {
     color: #7b0000;
   }
-  100% {
+  90% {
     width: 60px;
     height: 60px;
     line-height: 60px;
     color: #000;
+  }
+  100% {
+    color: #e51b1b;
   }
 }
 @keyframes prompt {
@@ -149,11 +156,14 @@ body {
   75% {
     color: #7b0000;
   }
-  100% {
+  90% {
     width: 60px;
     height: 60px;
     line-height: 60px;
     color: #000;
+  }
+  100% {
+    color: #e51b1b;
   }
 }
 .main .group-chat-panel {

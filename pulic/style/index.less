@@ -103,7 +103,9 @@ body {
 			animation-name: prompt;
 			animation-duration: 0.5s;
 			animation-timing-function: ease-in-out;
-			animation-iteration-count:2;
+			animation-iteration-count:3;
+			animation-delay: 5s;
+			animation-fill-mode: forwards;
 		}
 		@keyframes prompt {
 			0% {
@@ -124,11 +126,14 @@ body {
 			75% {
 				color: #7b0000;
 			}
-			100% {
+			90% {
 				width: 60px;
 				height: 60px;
 				line-height: 60px;
 				color: #000;
+			}
+			100%{
+				color: #e51b1b;
 			}
 		}
 	}
