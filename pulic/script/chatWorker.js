@@ -1,7 +1,7 @@
-/*importScripts('/socket.io/socket.io.js');
-var socket = io();*/
+importScripts('../../socket.io/socket.io.js');
+var socket = io();
 var Self = self;
-//var selfDelay=0;
+var selfDelay=0;
 var W = (function () {
 	var onEventList = {};
 	Self.onmessage = function (event) {
@@ -57,9 +57,10 @@ W.on('login', function (data) {
 	console.log('this is in the workers,data:',data);
 });
 
-/*socket.on('delay', function (time) {
+socket.on('delay', function (time) {
 	socket.emit('delay', time);
 });
 socket.on('upDelay', function (data) {
 	selfDelay = data[0];
-});*/
+	console.log('the delay is :',selfDelay);
+});

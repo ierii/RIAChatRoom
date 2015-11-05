@@ -84,7 +84,7 @@ $(document).ready(function () {
 		ME.USER.username = username;
 		//		emit login
 		console.log('this main workers emit!!');
-		ME.WOK.emit('login',[username]);
+		ME.WOK.emit('login',[username,'this other test msg!']);
 	}
 
 	function penelAnimateCtrl() {
