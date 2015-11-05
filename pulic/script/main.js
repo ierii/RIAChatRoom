@@ -3,7 +3,6 @@ $(document).ready(function () {
 		/*用户自定义数据*/
 		USER: {
 			username: '',
-			chatWorkes: new Worker('script/chatWorker.js')
 		},
 		/*dom相关*/
 		DOM: {
@@ -12,20 +11,19 @@ $(document).ready(function () {
 			$joinInput: $('#joinInput'),
 			$login: $('div.login'),
 			$main: $('div.main'),
-			$handlePenle: $('ul.handle-panel'),
+			$handlePanle: $('ul.handle-panel'),
 			$groupChatPanel: $('div.group-chat-panel')
 		},
-		WOK:(function(){
+		WOK: (function () {
 			return {
-				emit:function(){},
-				on:function(){},
-				trigger:function(){},
-				off:function(){}
+				emit: function () {},
+				on: function () {},
+				trigger: function () {},
+				off: function () {}
 			};
 		}())
 
 	};
-	ME.USER.chatWorkes.postMessage('this is test msg');
 	(function init() {
 		ME.DOM.$window.keydown(function (event) {
 			/*按键没有特殊的按键的影响*/
@@ -33,26 +31,45 @@ $(document).ready(function () {
 				ME.DOM.$joinInput.focus();
 			}
 			if (event.which === 13) {
-				ME.USER.username = cleanInput(ME.DOM.$joinInput.val());
-				ME.DOM.$login.fadeOut(1000, function () {
-					ME.DOM.$main.fadeIn(500);
-					initChatRoom();
+				ME.DOM.$login.hide(500, function () {
+					ME.DOM.$main.show(500);
 				});
+				initHandelPanel();
+				initGame(cleanInput(ME.DOM.$joinInput));
 			}
 		});
 	})();
+	/*初始化面板，添加面板的开关*/
+	function initHandelPanel() {
+		/*这里有与dom 的data-panel属性挂钩*/
+		var Panles = {
+			"groupChatRoom": ME.DOM.$groupChatPanel
+		};
+		ME.DOM.$handlePanle.on('click', 'li', function (event) {
+			var $this = $(this),
+				panelName = $(this).data('panel');
+			if(!!!panelName)return;
+			var $panel = Panles[panelName];
+			$this.removeClass('prompt');
+			$panel.slideToggle(500);
+		});
+		/*而后还可以写一下与消息同志的机制*/
+	}
+
+	function initLogin(username) {
+		ME.USER.username = username;
+		/*emit login*/
+	};
 	//  初始化聊天室，这里有与后台交互的功能
 	function initChatRoom() {
-		ME.DOM.$handlePenle.on('click', 'li', function (event) {
-			var $this = $(this);
-			var temp = ME.DOM.$groupChatPanel.slideToggle(1000);
-		});
+
 	};
 	//	初始化用户角色地图，这里也有
 	function initGame() {
-
+		//1.先显示出游戏角色
 	}
-	function penelAnimateCtrl(){
+
+	function penelAnimateCtrl() {
 
 	}
 	//  用于清除危险字符用的
