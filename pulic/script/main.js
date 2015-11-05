@@ -35,24 +35,24 @@ $(document).ready(function () {
 			if (event.which === 13) {
 				ME.USER.username = cleanInput(ME.DOM.$joinInput.val());
 				ME.DOM.$login.fadeOut(1000, function () {
-					ME.DOM.$login.css({
-						display: 'none'
-					});
 					ME.DOM.$main.fadeIn(500);
 					initChatRoom();
 				});
 			}
 		});
 	})();
-	//  初始化聊天室
+	//  初始化聊天室，这里有与后台交互的功能
 	function initChatRoom() {
 		ME.DOM.$handlePenle.on('click', 'li', function (event) {
 			var $this = $(this);
-			var temp = ME.DOM.$groupChatPanel.fadeToggle(500);
+			var temp = ME.DOM.$groupChatPanel.slideToggle(1000);
 		});
 	};
-	//	初始化用户角色地图
+	//	初始化用户角色地图，这里也有
 	function initGame() {
+
+	}
+	function penelAnimateCtrl(){
 
 	}
 	//  用于清除危险字符用的

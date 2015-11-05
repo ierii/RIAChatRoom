@@ -94,6 +94,68 @@ body {
   color: #ccc;
   border-color: #ccc;
 }
+.main .handle-panel li.prompt {
+  -webkit-animation-name: prompt;
+          animation-name: prompt;
+  -webkit-animation-duration: 0.5s;
+          animation-duration: 0.5s;
+  -webkit-animation-timing-function: ease-in-out;
+          animation-timing-function: ease-in-out;
+  -webkit-animation-iteration-count: 2;
+          animation-iteration-count: 2;
+}
+@-webkit-keyframes prompt {
+  0% {
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    color: #000;
+  }
+  25% {
+    color: #7b0000;
+  }
+  50% {
+    width: 65px;
+    height: 65px;
+    line-height: 65px;
+    color: #e51b1b;
+  }
+  75% {
+    color: #7b0000;
+  }
+  100% {
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    color: #000;
+  }
+}
+@keyframes prompt {
+  0% {
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    color: #000;
+  }
+  25% {
+    color: #7b0000;
+  }
+  50% {
+    width: 65px;
+    height: 65px;
+    line-height: 65px;
+    color: #e51b1b;
+  }
+  75% {
+    color: #7b0000;
+  }
+  100% {
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    color: #000;
+  }
+}
 .main .group-chat-panel {
   display: none;
   z-index: 1000;
