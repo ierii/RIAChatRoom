@@ -1,14 +1,13 @@
-importScripts('../../socket.io/socket.io.js');
+importScripts('/socket.io/socket.io.js');
 var socket = io();
 var Self = self;
-var selfDelay=0;
+var selfDelay = 0;
 var W = (function () {
 	var onEventList = {};
 	Self.onmessage = function (event) {
 		var data = event.data,
 			eType = data.type,
 			eData = data.data;
-		console.log('收到的数据是：',data);
 		W.trigger(eType, eData);
 	}
 	return {
@@ -26,8 +25,9 @@ var W = (function () {
 			onEventList[eType].push(handle);
 		},
 		/*data必须为数据数组*/
-		trigger: function (eType, data) {
-			var fns = onEventList[eType];
+		trigger: function (eType) {
+			var fns = onEventList[eType],
+				data = Array.prototype.slice.call(arguments, 1);
 			if (!fns || fns.length === 0) {
 				return false;
 			}
@@ -54,13 +54,19 @@ var W = (function () {
 	}
 }());
 W.on('login', function (data) {
-	console.log('this is in the workers,data:',data);
-});
+	socket.emit('login', data);
 
-socket.on('delay', function (time) {
-	socket.emit('delay', time);
+});
+socket.on('login', function (data) {
+	W.emit('login', data);
+});
+socket.on('userJoin',function(data){
+	W.emit('userJoin',data);
+});
+socket.on('delay', function (data) {
+	socket.emit('delay', data);
 });
 socket.on('upDelay', function (data) {
-	selfDelay = data[0];
-	console.log('the delay is :',selfDelay);
+	selfDelay = data.delay;
+	console.log('the delay is :', selfDelay);
 });
