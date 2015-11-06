@@ -9,6 +9,7 @@ body {
   position: absolute;
 }
 .login {
+  display: none;
   position: relative;
   width: 100%;
   height: 100%;
@@ -59,7 +60,6 @@ body {
   color: #8e8e8e;
 }
 .main {
-  display: none;
   position: relative;
   width: 100%;
   height: 100%;
@@ -168,7 +168,6 @@ body {
   }
 }
 .main .group-chat-panel {
-  display: none;
   z-index: 1000;
   position: absolute;
   top: 0px;
@@ -200,24 +199,36 @@ body {
   margin: 2% 3%;
   font-size: 14px;
 }
+.main .group-chat-panel .msg-wrapper li span {
+  padding-right: 4px;
+  font-weight: bold;
+}
 .main .group-chat-panel .msg-wrapper li.prompt {
   width: 60%;
   float: left;
   font-size: 12px;
-  color: #baa5a5;
-  border-bottom: 1px dashed #baa5a5;
+  color: #acacac;
+  border-bottom: 1px dashed #acacac;
+  border-left: 1px dashed #acacac;
+}
+.main .group-chat-panel .msg-wrapper li.typing {
+  width: 50%;
+  float: left;
+  color: #cccccc;
 }
 .main .group-chat-panel .msg-wrapper li.msg-left {
   text-align: left;
   float: left;
-  color: #12b3d9;
-  border-bottom: 1px dashed #12b3d9;
+  color: #008853;
+  border-left: 1px dashed #008853;
+  border-bottom: 1px dashed #008853;
 }
 .main .group-chat-panel .msg-wrapper li.msg-right {
   text-align: left;
   float: right;
-  color: #0fc145;
-  border-bottom: 1px dashed #19a529;
+  color: #1a9ba0;
+  border-left: 1px dashed #1a9ba0;
+  border-bottom: 1px dashed #1a9ba0;
 }
 .main .group-chat-panel .msg-input {
   width: 86%;

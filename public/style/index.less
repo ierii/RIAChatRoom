@@ -11,7 +11,7 @@ body {
 }
 
 .login {
-	//	display: none;
+		display: none;
 	position: relative;
 	width: 100%;
 	height: 100%;
@@ -65,7 +65,7 @@ body {
 
 .main {
 	//	border: 1px solid #000;
-		display: none;
+//		display: none;
 	position: relative;
 	width: 100%;
 	height: 100%;
@@ -138,7 +138,7 @@ body {
 		}
 	}
 	.group-chat-panel {
-		display: none;
+//		display: none;
 		z-index: 1000;
 		position: absolute;
 		top: 0px;
@@ -168,25 +168,42 @@ body {
 				padding: 2%;
 				margin: 2% 3%;
 				font-size: 14px;
+				span{
+					padding-right: 4px;
+					font-weight:bold;
+				}
 			}
 			li.prompt {
+				@color:#acacac;
 				width: 60%;
 				float: left;
 				font-size: 12px;
-				color: #baa5a5;
-				border-bottom: 1px dashed #baa5a5;
+				color: @color;
+				border-bottom: 1px dashed @color;
+				border-left: 1px dashed @color;
+			}
+			li.typing{
+				@color:#ccc;
+				width: 50%;
+				float: left;
+				color: @color;
+
 			}
 			li.msg-left {
+				@color:#008853;
 				text-align: left;
 				float: left;
-				color: #12b3d9;
-				border-bottom: 1px dashed #12b3d9;
+				color: @color;
+				border-left: 1px dashed @color;
+				border-bottom: 1px dashed @color;
 			}
 			li.msg-right {
+				@color:#1a9ba0;
 				text-align: left;
 				float: right;
-				color: #0fc145;
-				border-bottom: 1px dashed #19a529;
+				color: @color;
+				border-left: 1px dashed @color;
+				border-bottom: 1px dashed @color;
 			}
 		}
 		.msg-input {

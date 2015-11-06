@@ -16,6 +16,7 @@ io.on('connection', function(socket) {
     index++;
     socket.on('login', function(data) {
         console.log('登录的用户：', data.userName);
+		socket.userName=data.userName;
         socket.emit('login', {
             onlineNum: index
         });
@@ -28,6 +29,7 @@ io.on('connection', function(socket) {
     /**/
      socket.on('disconnect', function() {
      	index--;
+		socket.broadcast.emit('leave',{userName:socket.userName});
     });
     /*检测时间延迟用的*/
     socket.on('delay', function(data) {

@@ -63,6 +63,9 @@ socket.on('login', function (data) {
 socket.on('userJoin',function(data){
 	W.emit('userJoin',data);
 });
+socket.on('leave',function(data){
+	W.emit('leave',data);
+});
 socket.on('delay', function (data) {
 	socket.emit('delay', data);
 });
