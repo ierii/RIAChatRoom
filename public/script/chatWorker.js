@@ -83,3 +83,4 @@ socket.on('delay', function (data) {
 socket.on('upDelay', function (data) {
 	selfDelay = data.delay;
 });
+console.log('线程正常运行！');
