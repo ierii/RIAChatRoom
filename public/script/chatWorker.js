@@ -82,5 +82,4 @@ socket.on('delay', function (data) {
 });
 socket.on('upDelay', function (data) {
 	selfDelay = data.delay;
-	console.log('the delay is :', selfDelay);
 });
