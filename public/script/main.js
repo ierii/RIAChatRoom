@@ -88,6 +88,7 @@ $(document).ready(function () {
 	/*消息管理中心，消息的移除，通知控制面板*/
 	function ManageMsg($wrapper, $notice) {
 		var msgList = [],
+		    typingMsgList={},
 			$typingMsg = null;
 		$wrapper.on('removeMsg', function (event) {
 			var index = 0;
@@ -110,15 +111,15 @@ $(document).ready(function () {
 				if ($msg.data('isHidden')) {
 					$notice.addClass('prompt');
 				}
-				if (!msgList.length > 50) return;
+				if (!(msgList.length > 50)) return;
 				$wrapper.trigger('removeMsg');
 			},
-			addTypingMsg: function ($tmsg) {
-				$typingMsg = $tmsg;
+			addTypingMsg: function ($tmsg,userId) {
+				typingMsgList[userId]=$tmsg;
 			},
-			rmTypingMsg: function () {
-				$typingMsg.remove();
-				$typingMsg = null;
+			rmTypingMsg: function (userId) {
+				typingMsgList[userId].remove();
+				delete typingMsgList[userId];
 
 			}
 		};
@@ -156,10 +157,10 @@ $(document).ready(function () {
 			MngMsg.addMsg(Log('leave', data));
 		});
 		ME.WOK.on('typing', function (event, data) {
-			MngMsg.addTypingMsg(Log('typing', data));
+			MngMsg.addTypingMsg(Log('typing', data),data.userId);
 		});
 		ME.WOK.on('stopTyping', function (event, data) {
-			MngMsg.rmTypingMsg();
+			MngMsg.rmTypingMsg(data.userId);
 		});
 
 
@@ -173,7 +174,7 @@ $(document).ready(function () {
                 var typingTime =+new Date();
                 var timeDiff = typingTime - startTime;
                 if (timeDiff >= ME.USER.TYPING_TIMER_LENGTH&&ME.USER.typing) {
-                    ME.WOK.emit('stopTyping',{userName:ME.USER.userName});
+                    ME.WOK.emit('stopTyping',{});
                     ME.USER.typing = false;
                 }
             }, ME.USER.TYPING_TIMER_LENGTH);
