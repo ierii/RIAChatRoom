@@ -3,7 +3,10 @@ $(document).ready(function () {
 		/*自定义数据*/
 		USER: {
 			userName: '',
-			connected:false;
+			userId:'',
+			connected: false,
+			typing:false,
+			TYPING_TIMER_LENGTH:400
 		},
 		/*dom相关*/
 		DOM: {
@@ -14,7 +17,10 @@ $(document).ready(function () {
 			$main: $('div.main'),
 			$handlePanle: $('ul.handle-panel'),
 			$groupChatPanel: $('div.group-chat-panel'),
-			$msgTemplate:$('#msgTemplate')
+			$groupChatMsgWrapper: $('#group-msg-wrapper'),
+			$groupChatInput:$('#group-msg-input'),
+			$groupChatBtn: $('#groupChatRoom'),
+			$msgTemplate: $('#msgTemplate'),
 		},
 		/*与线程通讯用的*/
 		WOK: FactoryWorker('script/chatWorker.js')
@@ -40,7 +46,9 @@ $(document).ready(function () {
 	function FactoryWorker(workerUrl) {
 		if (!window.Worker) return;
 		var worker = new Worker(workerUrl),
-			$event = $({});
+			/*这里单单借用jquery的事件属性*/
+			$event = $();
+		/*加上一层包装用于与线程通讯*/
 		var W = {
 			emit: function (type, data) {
 				worker.postMessage({
@@ -64,30 +72,56 @@ $(document).ready(function () {
 		return W;
 	};
 	/*消息列表生成用的*/
-	function BuildLog($wrapper){
-		var msgTemplate=ME.DOM.$msgTemplate.html(),
-			buildTemplate=window.juicer(msgTemplate);
-		return function(type,data){
-			data.type=type;
-			$wrapper.append(buildTemplate.render(data));
+	function BuildLog($wrapper) {
+		/*这里利用模板引擎生成对应消息列表*/
+		var msgTemplate = ME.DOM.$msgTemplate.html(),
+			buildTemplate = window.juicer(msgTemplate);
+		return function (type, data) {
+			data.type = type;
+			var liHtml = buildTemplate.render(data),
+				$msg = $(liHtml);
+			$wrapper.append($msg);
+			return $msg;
 		}
 
 	}
 	/*消息管理中心，消息的移除，通知控制面板*/
-	function ManageMsg($wrapper,$notice){
-		var msglist={
-			'msgNodes':[],
-			'typMsgNode':null
-		}
-		$wrapper.on('removeMsg',function(event,$node){
-
+	function ManageMsg($wrapper, $notice) {
+		var msgList = [],
+			$typingMsg = null;
+		$wrapper.on('removeMsg', function (event) {
+			var index = 0;
+			while (index++ < 30) {
+				var $item = msgList.shift();
+				$item.remove();
+			}
+			$wrapper.trigger('scrollBottom');
 		});
+		$wrapper.on('scrollBottom', function () {
+			var scrollHeight = $wrapper[0].scrollHeight;
+			$wrapper.animate({
+				scrollTop: scrollHeight
+			}, 500);
+		})
 		return {
-			removeTypingMsg:function(){
-				$wrapper.removeChild(msglist.typMsgNode);
+			addMsg: function ($msg) {
+				msgList.push($msg);
+				$wrapper.trigger('scrollBottom');
+				if ($msg.data('isHidden')) {
+					$notice.addClass('prompt');
+				}
+				if (!msgList.length > 50) return;
+				$wrapper.trigger('removeMsg');
 			},
+			addTypingMsg: function ($tmsg) {
+				$typingMsg = $tmsg;
+			},
+			rmTypingMsg: function () {
+				$typingMsg.remove();
+				$typingMsg = null;
 
-		}
+			}
+		};
 	}
 	/*初始化面板，添加面板的开关*/
 	function initHandelPanel() {
@@ -102,33 +136,53 @@ $(document).ready(function () {
 			var $panel = Panles[panelName];
 			$this.removeClass('prompt');
 			$panel.slideToggle(500);
+			var isHidden = !!$panel.is(':hidden');
+			$this.data('isHidden', isHidden);
 		});
-		/*而后还可以写一下与消息同志的机制*/
 	}
 	//  初始化聊天室，这里有与后台交互的功能
 	function initChatRoom() {
-		var Log=BuildLog($('ul.msg-wrapper'));
+		var Log = BuildLog(ME.DOM.$groupChatMsgWrapper),
+			MngMsg = ManageMsg(ME.DOM.$groupChatMsgWrapper, ME.DOM.$groupChatBtn);
 		ME.WOK.on('login', function (event, data) {
 			data.userName = ME.USER.userName;
-			Log('join', data);
+			ME.USER.userId=data.userId;
+			MngMsg.addMsg(Log('join', data));
 		});
 		ME.WOK.on('userJoin', function (event, data) {
-			Log('join', data);
+			MngMsg.addMsg(Log('join', data));
 		});
 		ME.WOK.on('leave', function (event, data) {
-			Log('leave', data);
+			MngMsg.addMsg(Log('leave', data));
 		});
-		ME.WOK.on('typing',function(event,data){
-			Log('typing',data)
+		ME.WOK.on('typing', function (event, data) {
+			MngMsg.addTypingMsg(Log('typing', data));
 		});
-		ME.WOK.on('stopTyping',function(event,data){
+		ME.WOK.on('stopTyping', function (event, data) {
+			MngMsg.rmTypingMsg();
+		});
 
+
+
+		ME.DOM.$groupChatInput.on('input',function(){
+			if(!ME.USER.connected)return;
+			if(!ME.USER.typing)ME.USER.typing=true;
+			var startTime=+new Date();
+			ME.WOK.emit('typing',{userName:ME.USER.userName});
+			setTimeout(function () {
+                var typingTime =+new Date();
+                var timeDiff = typingTime - startTime;
+                if (timeDiff >= ME.USER.TYPING_TIMER_LENGTH&&ME.USER.typing) {
+                    ME.WOK.emit('stopTyping',{userName:ME.USER.userName});
+                    ME.USER.typing = false;
+                }
+            }, ME.USER.TYPING_TIMER_LENGTH);
 		});
 	};
 	//	初始化用户角色地图，这里也有
 	function initGame(username) {
 		ME.USER.userName = username;
-		ME.USER.connected=true;
+		ME.USER.connected = true;
 		ME.WOK.emit('login', {
 			userName: username
 		});

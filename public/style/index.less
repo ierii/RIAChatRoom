@@ -11,7 +11,7 @@ body {
 }
 
 .login {
-//		display: none;
+	//		display: none;
 	position: relative;
 	width: 100%;
 	height: 100%;
@@ -65,7 +65,7 @@ body {
 
 .main {
 	//	border: 1px solid #000;
-		display: none;
+	display: none;
 	position: relative;
 	width: 100%;
 	height: 100%;
@@ -103,7 +103,7 @@ body {
 			animation-name: prompt;
 			animation-duration: 0.5s;
 			animation-timing-function: ease-in-out;
-			animation-iteration-count:3;
+			animation-iteration-count: 3;
 			animation-delay: 5s;
 			animation-fill-mode: forwards;
 		}
@@ -132,13 +132,13 @@ body {
 				line-height: 60px;
 				color: #000;
 			}
-			100%{
+			100% {
 				color: #e51b1b;
 			}
 		}
 	}
 	.group-chat-panel {
-//		display: none;
+		//		display: none;
 		z-index: 1000;
 		position: absolute;
 		top: 0px;
@@ -148,13 +148,20 @@ body {
 		//		border:1px solid #000;
 		border-radius: 5px;
 		background: rgba(255, 255, 255, 0);
-		.msg-wrapper,
-		.msg-input {
+		#group-msg-wrapper,
+		#group-msg-input {
 			border-radius: 3px;
 			display: block;
 			margin: 2% auto;
 		}
-		.msg-wrapper {
+		#group-msg-input {
+			width: 86%;
+			padding: 3% 2%;
+			display: block;
+			border: 2px solid #000;
+			background: rgba(255, 255, 255, 0);
+		}
+		#group-msg-wrapper {
 			display: block;
 			border: 2px solid #000000;
 			width: 90%;
@@ -168,13 +175,14 @@ body {
 				padding: 2%;
 				margin: 2% 3%;
 				font-size: 14px;
-				span{
+				span {
 					padding-right: 4px;
-					font-weight:bold;
+					font-weight: bold;
 				}
 			}
-			li.msg-join,li.msg-leave{
-				@color:#acacac;
+			li.msg-join,
+			li.msg-leave {
+				@color: #acacac;
 				width: 80%;
 				float: left;
 				font-size: 12px;
@@ -182,15 +190,14 @@ body {
 				border-bottom: 1px dashed @color;
 				border-left: 1px dashed @color;
 			}
-			li.msg-typing{
-				@color:#ccc;
+			li.msg-typing {
+				@color: #ccc;
 				width: 50%;
 				float: left;
 				color: @color;
-
 			}
 			li.msg-left {
-				@color:#008853;
+				@color: #008853;
 				text-align: left;
 				float: left;
 				color: @color;
@@ -198,20 +205,13 @@ body {
 				border-bottom: 1px dashed @color;
 			}
 			li.msg-right {
-				@color:#1a9ba0;
+				@color: #1a9ba0;
 				text-align: left;
 				float: right;
 				color: @color;
 				border-left: 1px dashed @color;
 				border-bottom: 1px dashed @color;
 			}
-		}
-		.msg-input {
-			width: 86%;
-			padding: 3% 2%;
-			display: block;
-			border: 2px solid #000;
-			background: rgba(255, 255, 255, 0);
 		}
 	}
 	.game-wrapper {

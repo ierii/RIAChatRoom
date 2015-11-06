@@ -29,7 +29,13 @@
 </head>
 
 <body>
-	<div id="prompt" class="animate"></div>
+	<div id="prompt" class="animate">
+		<ul class="test">
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+	</div>
 	<script src="script/extends/juicer-min.js"></script>
 	<script src="script/extends/jquery.min.js"></script>
 	<script type="template" id="template">
@@ -55,6 +61,9 @@
 				userName:'nan',
 				onlineNum:1
 			}));
+			var $prompt=$('#prompt');
+			var $test=$prompt.find('.test');
+			console.log($prompt,$test);
 		});
 	</script>
 </body>

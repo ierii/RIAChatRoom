@@ -18,7 +18,8 @@ io.on('connection', function(socket) {
         console.log('登录的用户：', data.userName);
 		socket.userName=data.userName;
         socket.emit('login', {
-            onlineNum: index
+            onlineNum: index,
+			userId:socket.id
         });
         socket.broadcast.emit('userJoin', {
             onlineNum: index,
@@ -26,6 +27,14 @@ io.on('connection', function(socket) {
         });
 
     });
+	socket.on('typing',function(data){
+		data.userId=socket.id;
+		socket.broadcast.emit('typing',data);
+	})
+	socket.on('stopTyping',function(data){
+		data.userId=socket.id;
+		socket.broadcast.emit('stopTyping',data);
+	})
     /**/
      socket.on('disconnect', function() {
      	index--;
