@@ -28,16 +28,19 @@ $(document).ready(function () {
 	};
 	(function init() {
 		var inputUname = '';
+		var bindLoginInput = BindKeyDown(ME.DOM.$joinInput,
+			function ($input) {
+				/*回车执行的先决条件*/
+				return inputUname = $input.val().trim();
+			},
+			function ($input, msg) {
+				/*回车可执行的事件*/
+				inputUname = msg;
+				ME.DOM.$joinBtn.trigger('click');
+			});
 		initChatRoom();
 		initHandelPanel();
-		ME.DOM.$window.keydown(function (event) {
-			if (event.ctrlKey || event.metaKey || event.altKey) return;
-			ME.DOM.$joinInput.focus();
-			inputUname = ME.DOM.$joinInput.val().trim();
-			if (event.which === 13 && (!!inputUname)) {
-				ME.DOM.$joinBtn.trigger('click');
-			}
-		});
+		bindLoginInput.bind();
 		ME.DOM.$joinBtn.on('click', function (event) {
 			event.preventDefault();
 			if (!inputUname) return;
@@ -45,11 +48,32 @@ $(document).ready(function () {
 				ME.DOM.$main.show(500);
 			});
 			ME.DOM.$joinBtn.off('click');
-			ME.DOM.$window.unbind();
+			bindLoginInput.unbind();
 			initGame(cleanInput(inputUname));
 		});
 	}());
-	/*线程工厂*/
+	/*绑定的输入对象，前提执行函数，确定执行函数*/
+	function BindKeyDown($input, premise, fn) {
+		var msg = '';
+		var handle = function (event) {
+				msg = premise($input);
+				if (event.ctrlKey || event.metaKey || event.altKey) return;
+				$input.focus();
+				if (event.which === 13 && !!msg) {
+					fn($input, msg);
+				}
+			}
+			/*用于绑定或解绑定用的*/
+		return {
+			bind: function () {
+				ME.DOM.$window.on('keydown', handle);
+			},
+			unbind: function () {
+				ME.DOM.$window.off('keydown', handle);
+			}
+		};
+	}
+	/*线程工厂，包装产生出可以与后台直接进行事件通讯的wok对象*/
 	function FactoryWorker(workerUrl) {
 		if (!window.Worker) return;
 		var worker = new Worker(workerUrl),
@@ -99,9 +123,9 @@ $(document).ready(function () {
 				scrollTop: scrollHeight
 			}, 500);
 		});
-		$notice.on('prompt',function(event){
+		$notice.on('prompt', function (event) {
 			console.log('add prompt!!!');
-			if($notice.data('hidden')){
+			if ($notice.data('hidden')) {
 				$notice.addClass('prompt');
 			}
 		});
@@ -129,7 +153,7 @@ $(document).ready(function () {
 			rmTypMsg: function (data) {
 				var userId = data.userId;
 				if (!userId) return;
-				typingMsgList[userId].fadeOut('slow',function(){
+				typingMsgList[userId].fadeOut('slow', function () {
 					$(this).remove();
 				});
 				delete typingMsgList[userId];
@@ -145,19 +169,33 @@ $(document).ready(function () {
 		ME.DOM.$handlePanle.on('click', 'li', function (event) {
 			var $this = $(this),
 				panelName = $(this).data('panel'),
-				isHidden=$(this).data('hidden');
+				isHidden = $(this).data('hidden');
 			if (!!!panelName) return;
 			var $panel = Panles[panelName];
 			$this.removeClass('prompt');
-			$this.data('hidden',!isHidden);
+			$this.data('hidden', !isHidden);
+			$panel.data('hidden', !isHidden);
 			$panel.slideToggle(500);
 		});
 	}
 	//  初始化聊天室，这里有与后台交互的功能
 	function initChatRoom() {
-		var MngMsg = ManageMsg(ME.DOM.$groupChatMsgWrapper, ME.DOM.$groupChatBtn,ME.DOM.$msgTemplate);
-
-
+		var MngMsg = ManageMsg(ME.DOM.$groupChatMsgWrapper, ME.DOM.$groupChatBtn, ME.DOM.$msgTemplate);
+		/*用户发送消息*/
+		var bindGroupMsgInput = BindKeyDown(ME.DOM.$groupChatInput,
+			function ($input) {
+				return (!ME.DOM.$groupChatPanel.data('hidden')) && $input.val().trim();
+			},
+			function ($input, msg) {
+				var data = {
+					userName: ME.USER.userName,
+					msg: msg
+				};
+				ME.WOK.emit('msg', data);
+				$input.val('');
+				MngMsg.log('left', data);
+			});
+		bindGroupMsgInput.bind();
 		ME.WOK.on('login', function (event, data) {
 			console.log('the user login:', data);
 			ME.USER.userId = data.userId;
@@ -171,14 +209,16 @@ $(document).ready(function () {
 			MngMsg.log('leave', data);
 		});
 		ME.WOK.on('typing', function (event, data) {
-			MngMsg.logTypMsg('typing',data);
+			MngMsg.logTypMsg('typing', data);
 		});
 		ME.WOK.on('stopTyping', function (event, data) {
 			MngMsg.rmTypMsg(data);
 		});
 
-
-
+		ME.WOK.on('msg', function (event, data) {
+			MngMsg.log('right', data);
+		});
+		/*用户正在输入与停止事件的触发*/
 		ME.DOM.$groupChatInput.on('input', function () {
 			if (!ME.USER.connected) return;
 			if (!ME.USER.typing) {
@@ -197,6 +237,7 @@ $(document).ready(function () {
 				}
 			}, ME.USER.TYPING_TIMER_LENGTH);
 		});
+
 	};
 	//	初始化用户角色地图，这里也有
 	function initGame(username) {
@@ -210,6 +251,5 @@ $(document).ready(function () {
 	function cleanInput(input) {
 		return $('<div/>').text(input).text();
 	};
-
 
 });

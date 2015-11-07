@@ -62,6 +62,12 @@ W.on('typing', function (data) {
 W.on('stopTyping', function (data) {
 	socket.emit('stopTyping', data);
 });
+W.on('msg',function(data){
+	socket.emit('msg',data);
+});
+socket.on('msg',function(data){
+	W.emit('msg',data);
+});
 socket.on('typing', function (data) {
 	W.emit('typing', data);
 });

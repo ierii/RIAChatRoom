@@ -13,8 +13,8 @@ app.use(express.static(__dirname + '/public'));
 var users = [],
     index = 0;
 io.on('connection', function(socket) {
-    index++;
     socket.on('login', function(data) {
+		index++;
         console.log('登录的用户：', data.userName);
 		socket.userName=data.userName;
         socket.emit('login', {
@@ -31,15 +31,19 @@ io.on('connection', function(socket) {
 		console.log('in server in typing',data);
 		data.userId=socket.id;
 		socket.broadcast.emit('typing',data);
-	})
+	});
 	socket.on('stopTyping',function(data){
 		console.log('in server in stoptyping',data);
 		data.userId=socket.id;
 		socket.broadcast.emit('stopTyping',data);
-	})
-    /**/
+	});
+	socket.on('msg',function(data){
+		console.log('in server the user msg is:',data);
+		socket.broadcast.emit('msg',data);
+	});
+    /*用户离开*/
      socket.on('disconnect', function() {
-     	index--;
+     	index=index>0?index--:0;
 		socket.broadcast.emit('leave',{userName:socket.userName,onlineNum:index});
     });
     /*检测时间延迟用的*/
