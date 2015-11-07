@@ -28,10 +28,12 @@ io.on('connection', function(socket) {
 
     });
 	socket.on('typing',function(data){
+		console.log('in server in typing',data);
 		data.userId=socket.id;
 		socket.broadcast.emit('typing',data);
 	})
 	socket.on('stopTyping',function(data){
+		console.log('in server in stoptyping',data);
 		data.userId=socket.id;
 		socket.broadcast.emit('stopTyping',data);
 	})

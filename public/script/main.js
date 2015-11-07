@@ -3,10 +3,11 @@ $(document).ready(function () {
 		/*自定义数据*/
 		USER: {
 			userName: '',
-			userId:'',
+			userId: '',
 			connected: false,
-			typing:false,
-			TYPING_TIMER_LENGTH:400
+			typing: false,
+			START_INPUT_TIME: 0,
+			TYPING_TIMER_LENGTH: 800
 		},
 		/*dom相关*/
 		DOM: {
@@ -18,7 +19,7 @@ $(document).ready(function () {
 			$handlePanle: $('ul.handle-panel'),
 			$groupChatPanel: $('div.group-chat-panel'),
 			$groupChatMsgWrapper: $('#group-msg-wrapper'),
-			$groupChatInput:$('#group-msg-input'),
+			$groupChatInput: $('#group-msg-input'),
 			$groupChatBtn: $('#groupChatRoom'),
 			$msgTemplate: $('#msgTemplate'),
 		},
@@ -26,28 +27,34 @@ $(document).ready(function () {
 		WOK: FactoryWorker('script/chatWorker.js')
 	};
 	(function init() {
+		var inputUname = '';
+		initChatRoom();
+		initHandelPanel();
 		ME.DOM.$window.keydown(function (event) {
-			/*按键没有特殊的按键的影响*/
-			if (!(event.ctrlKey || event.metaKey || event.altKey)) {
-				ME.DOM.$joinInput.focus();
-			}
-			var inputUname = ME.DOM.$joinInput.val().trim();
+			if (event.ctrlKey || event.metaKey || event.altKey) return;
+			ME.DOM.$joinInput.focus();
+			inputUname = ME.DOM.$joinInput.val().trim();
 			if (event.which === 13 && (!!inputUname)) {
-				ME.DOM.$login.hide(500, function () {
-					ME.DOM.$main.show(500);
-				});
-				initHandelPanel();
-				initGame(cleanInput(inputUname));
-				initChatRoom();
+				ME.DOM.$joinBtn.trigger('click');
 			}
 		});
-	})();
+		ME.DOM.$joinBtn.on('click', function (event) {
+			event.preventDefault();
+			if (!inputUname) return;
+			ME.DOM.$login.hide(500, function () {
+				ME.DOM.$main.show(500);
+			});
+			ME.DOM.$joinBtn.off('click');
+			ME.DOM.$window.unbind();
+			initGame(cleanInput(inputUname));
+		});
+	}());
 	/*线程工厂*/
 	function FactoryWorker(workerUrl) {
 		if (!window.Worker) return;
 		var worker = new Worker(workerUrl),
 			/*这里单单借用jquery的事件属性*/
-			$event = $();
+			$event = $({});
 		/*加上一层包装用于与线程通讯*/
 		var W = {
 			emit: function (type, data) {
@@ -71,25 +78,13 @@ $(document).ready(function () {
 		}
 		return W;
 	};
-	/*消息列表生成用的*/
-	function BuildLog($wrapper) {
-		/*这里利用模板引擎生成对应消息列表*/
-		var msgTemplate = ME.DOM.$msgTemplate.html(),
-			buildTemplate = window.juicer(msgTemplate);
-		return function (type, data) {
-			data.type = type;
-			var liHtml = buildTemplate.render(data),
-				$msg = $(liHtml);
-			$wrapper.append($msg);
-			return $msg;
-		}
 
-	}
 	/*消息管理中心，消息的移除，通知控制面板*/
-	function ManageMsg($wrapper, $notice) {
-		var msgList = [],
-		    typingMsgList={},
-			$typingMsg = null;
+	function ManageMsg($wrapper, $notice, $template) {
+		var msgTemplate = $template.html(),
+			buildTemplate = window.juicer(msgTemplate),
+			msgList = [],
+			typingMsgList = {};
 		$wrapper.on('removeMsg', function (event) {
 			var index = 0;
 			while (index++ < 30) {
@@ -103,24 +98,41 @@ $(document).ready(function () {
 			$wrapper.animate({
 				scrollTop: scrollHeight
 			}, 500);
-		})
+		});
+		$notice.on('prompt',function(event){
+			console.log('add prompt!!!');
+			if($notice.data('hidden')){
+				$notice.addClass('prompt');
+			}
+		});
 		return {
-			addMsg: function ($msg) {
-				msgList.push($msg);
+			log: function (type, data) {
+				data.type = type;
+				var msg = buildTemplate.render(data);
+				msgList.push($(msg).appendTo($wrapper));
+				/*触发滚动消息列表的事件*/
 				$wrapper.trigger('scrollBottom');
-				if ($msg.data('isHidden')) {
-					$notice.addClass('prompt');
+				/*出发面板的消息提示*/
+				$notice.trigger('prompt');
+				/*消息达到上限是截取消息列表*/
+				if (msgList.length >= 50) {
+					$wrapper.trigger('removeMsg');
 				}
-				if (!(msgList.length > 50)) return;
-				$wrapper.trigger('removeMsg');
 			},
-			addTypingMsg: function ($tmsg,userId) {
-				typingMsgList[userId]=$tmsg;
+			logTypMsg: function (type, data) {
+				var userId = data.userId;
+				if (typingMsgList[userId]) return;
+				data.type = type;
+				var msg = buildTemplate.render(data);
+				typingMsgList[userId] = $(msg).appendTo($wrapper);
 			},
-			rmTypingMsg: function (userId) {
-				typingMsgList[userId].remove();
+			rmTypMsg: function (data) {
+				var userId = data.userId;
+				if (!userId) return;
+				typingMsgList[userId].fadeOut('slow',function(){
+					$(this).remove();
+				});
 				delete typingMsgList[userId];
-
 			}
 		};
 	}
@@ -132,52 +144,58 @@ $(document).ready(function () {
 		};
 		ME.DOM.$handlePanle.on('click', 'li', function (event) {
 			var $this = $(this),
-				panelName = $(this).data('panel');
+				panelName = $(this).data('panel'),
+				isHidden=$(this).data('hidden');
 			if (!!!panelName) return;
 			var $panel = Panles[panelName];
 			$this.removeClass('prompt');
+			$this.data('hidden',!isHidden);
 			$panel.slideToggle(500);
-			var isHidden = !!$panel.is(':hidden');
-			$this.data('isHidden', isHidden);
 		});
 	}
 	//  初始化聊天室，这里有与后台交互的功能
 	function initChatRoom() {
-		var Log = BuildLog(ME.DOM.$groupChatMsgWrapper),
-			MngMsg = ManageMsg(ME.DOM.$groupChatMsgWrapper, ME.DOM.$groupChatBtn);
+		var MngMsg = ManageMsg(ME.DOM.$groupChatMsgWrapper, ME.DOM.$groupChatBtn,ME.DOM.$msgTemplate);
+
+
 		ME.WOK.on('login', function (event, data) {
+			console.log('the user login:', data);
+			ME.USER.userId = data.userId;
 			data.userName = ME.USER.userName;
-			ME.USER.userId=data.userId;
-			MngMsg.addMsg(Log('join', data));
+			MngMsg.log('join', data);
 		});
 		ME.WOK.on('userJoin', function (event, data) {
-			MngMsg.addMsg(Log('join', data));
+			MngMsg.log('join', data);
 		});
 		ME.WOK.on('leave', function (event, data) {
-			MngMsg.addMsg(Log('leave', data));
+			MngMsg.log('leave', data);
 		});
 		ME.WOK.on('typing', function (event, data) {
-			MngMsg.addTypingMsg(Log('typing', data),data.userId);
+			MngMsg.logTypMsg('typing',data);
 		});
 		ME.WOK.on('stopTyping', function (event, data) {
-			MngMsg.rmTypingMsg(data.userId);
+			MngMsg.rmTypMsg(data);
 		});
 
 
 
-		ME.DOM.$groupChatInput.on('input',function(){
-			if(!ME.USER.connected)return;
-			if(!ME.USER.typing)ME.USER.typing=true;
-			var startTime=+new Date();
-			ME.WOK.emit('typing',{userName:ME.USER.userName});
+		ME.DOM.$groupChatInput.on('input', function () {
+			if (!ME.USER.connected) return;
+			if (!ME.USER.typing) {
+				ME.USER.typing = true;
+				ME.WOK.emit('typing', {
+					userName: ME.USER.userName
+				});
+			}
+			ME.USER.START_INPUT_TIME = +new Date();
 			setTimeout(function () {
-                var typingTime =+new Date();
-                var timeDiff = typingTime - startTime;
-                if (timeDiff >= ME.USER.TYPING_TIMER_LENGTH&&ME.USER.typing) {
-                    ME.WOK.emit('stopTyping',{});
-                    ME.USER.typing = false;
-                }
-            }, ME.USER.TYPING_TIMER_LENGTH);
+				var typingTime = +new Date();
+				var timeDiff = typingTime - ME.USER.START_INPUT_TIME;
+				if (timeDiff >= ME.USER.TYPING_TIMER_LENGTH && ME.USER.typing) {
+					ME.WOK.emit('stopTyping', {});
+					ME.USER.typing = false;
+				}
+			}, ME.USER.TYPING_TIMER_LENGTH);
 		});
 	};
 	//	初始化用户角色地图，这里也有

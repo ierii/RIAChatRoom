@@ -57,18 +57,19 @@ W.on('login', function (data) {
 	socket.emit('login', data);
 });
 W.on('typing', function (data) {
-	socket.emit('typing',data);
-	socket.on('typing',function(data){
-		W.emit('typing',data);
-	});
+	socket.emit('typing', data);
 });
-W.on('stopTyping',function(data){
-	socket.emit('stopTyping',data);
-	socket.on('stopTyping',function(data){
-		W.emit('stopTyping',data);
-	});
+W.on('stopTyping', function (data) {
+	socket.emit('stopTyping', data);
+});
+socket.on('typing', function (data) {
+	W.emit('typing', data);
+});
+socket.on('stopTyping', function (data) {
+	W.emit('stopTyping', data);
 });
 socket.on('login', function (data) {
+
 	W.emit('login', data);
 });
 socket.on('userJoin', function (data) {
@@ -77,6 +78,7 @@ socket.on('userJoin', function (data) {
 socket.on('leave', function (data) {
 	W.emit('leave', data);
 });
+
 socket.on('delay', function (data) {
 	socket.emit('delay', data);
 });
