@@ -43,7 +43,7 @@ io.on('connection', function(socket) {
 	});
     /*用户离开*/
      socket.on('disconnect', function() {
-     	index=index>0?index--:0;
+     	index=index>0?--index:0;
 		socket.broadcast.emit('leave',{userName:socket.userName,onlineNum:index});
     });
     /*检测时间延迟用的*/
